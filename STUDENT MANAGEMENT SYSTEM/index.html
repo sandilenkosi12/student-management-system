@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System | Sandile Nkosi</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js for graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header>
+            <div class="header-left">
+                <h1><i class="fas fa-graduation-cap"></i> EduTrack</h1>
+                <p class="subtitle">Student Management System</p>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="userRole">Admin</span>
+                </div>
+                <div class="date-display">
+                    <span id="currentDate"></span>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Stats Dashboard -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Students</span>
+                        <span class="stat-value" id="totalStudents">0</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Avg. Grade</span>
+                        <span class="stat-value" id="avgGrade">0%</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Avg. Attendance</span>
+                        <span class="stat-value" id="avgAttendance">0%</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Top Performer</span>
+                        <span class="stat-value" id="topPerformer">-</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="action-bar">
+                <button class="btn-primary" id="addStudentBtn">
+                    <i class="fas fa-plus"></i> Add New Student
+                </button>
+                <button class="btn-secondary" id="exportBtn">
+                    <i class="fas fa-download"></i> Export Report
+                </button>
+                <button class="btn-secondary" id="importBtn">
+                    <i class="fas fa-upload"></i> Import Data
+                </button>
+            </div>
+            
+            <!-- Main Dashboard Grid -->
+            <div class="dashboard-grid">
+                <!-- Student Table Section -->
+                <div class="dashboard-card students-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-user-graduate"></i> Student Records</h3>
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchStudent" placeholder="Search students...">
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="studentsTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Grade</th>
+                                        <th>Attendance</th>
+                                        <th>Average</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="studentsTableBody">
+                                    <!-- Students will be added here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Charts Section -->
+                <div class="dashboard-card charts-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-pie"></i> Analytics</h3>
+                        <div class="chart-tabs">
+                            <button class="chart-tab active" data-chart="grades">Grades</button>
+                            <button class="chart-tab" data-chart="attendance">Attendance</button>
+                            <button class="chart-tab" data-chart="performance">Performance</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="mainChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Activity -->
+                <div class="dashboard-card activity-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-history"></i> Recent Activity</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="activityLog">
+                            <!-- Activity log will be populated here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="dashboard-card quick-actions-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="quick-actions-grid">
+                            <button class="quick-action-btn" onclick="markAttendanceAll()">
+                                <i class="fas fa-calendar-check"></i>
+                                <span>Mark Attendance</span>
+                            </button>
+                            <button class="quick-action-btn" onclick="generateReport()">
+                                <i class="fas fa-file-pdf"></i>
+                                <span>Generate Report</span>
+                            </button>
+                            <button class="quick-action-btn" onclick="sendNotifications()">
+                                <i class="fas fa-bell"></i>
+                                <span>Send Alerts</span>
+                            </button>
+                            <button class="quick-action-btn" onclick="backupData()">
+                                <i class="fas fa-database"></i>
+                                <span>Backup Data</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Add/Edit Student Modal -->
+        <div id="studentModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalTitle">Add New Student</h3>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <form id="studentForm">
+                        <input type="hidden" id="studentId">
+                        
+                        <div class="form-group">
+                            <label for="studentName">Full Name *</label>
+                            <input type="text" id="studentName" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="studentGrade">Grade *</label>
+                                <select id="studentGrade" class="form-control" required>
+                                    <option value="">Select Grade</option>
+                                    <option value="8">Grade 8</option>
+                                    <option value="9">Grade 9</option>
+                                    <option value="10">Grade 10</option>
+                                    <option value="11">Grade 11</option>
+                                    <option value="12">Grade 12</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="studentClass">Class *</label>
+                                <select id="studentClass" class="form-control" required>
+                                    <option value="">Select Class</option>
+                                    <option value="A">Class A</option>
+                                    <option value="B">Class B</option>
+                                    <option value="C">Class C</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="studentEmail">Email</label>
+                            <input type="email" id="studentEmail" class="form-control" placeholder="student@school.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="studentPhone">Phone</label>
+                            <input type="tel" id="studentPhone" class="form-control" placeholder="+27 12 345 6789">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="studentAddress">Address</label>
+                            <textarea id="studentAddress" class="form-control" rows="2"></textarea>
+                        </div>
+                        
+                        <h4>Academic Records</h4>
+                        <div class="subjects-grid">
+                            <div class="subject-input">
+                                <label>Mathematics</label>
+                                <input type="number" id="mathGrade" class="form-control" min="0" max="100" step="0.1">
+                            </div>
+                            <div class="subject-input">
+                                <label>English</label>
+                                <input type="number" id="englishGrade" class="form-control" min="0" max="100" step="0.1">
+                            </div>
+                            <div class="subject-input">
+                                <label>Science</label>
+                                <input type="number" id="scienceGrade" class="form-control" min="0" max="100" step="0.1">
+                            </div>
+                            <div class="subject-input">
+                                <label>History</label>
+                                <input type="number" id="historyGrade" class="form-control" min="0" max="100" step="0.1">
+                            </div>
+                        </div>
+                        
+                        <h4>Attendance</h4>
+                        <div class="attendance-input">
+                            <label>Days Present (out of 100)</label>
+                            <input type="number" id="attendanceDays" class="form-control" min="0" max="100" value="85">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button class="btn-primary" onclick="saveStudent()">Save Student</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Report Modal -->
+        <div id="reportModal" class="modal">
+            <div class="modal-content modal-lg">
+                <div class="modal-header">
+                    <h3>Student Performance Report</h3>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div id="reportContent">
+                        <!-- Report will be generated here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="printReport()">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                    <button class="btn-primary" onclick="downloadReport()">
+                        <i class="fas fa-download"></i> Download PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <p>© 2026 Sandile Nkosi | 060 523 9905 | abelnkosi2000@gmail.com</p>
+                <p class="small">📍 Katlehong, Gauteng | Student Management System v1.0</p>
+            </div>
+        </footer>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
