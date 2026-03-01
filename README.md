@@ -23,6 +23,7 @@ A comprehensive student management system for tracking grades, attendance, and g
 - Font Awesome Icons
 - Local Storage API
 
+live demo https://sandilenkosi12.github.io/student-management-system/
 ## 👨‍💻 Author
 **Sandile Abel Nkosi**
 - 📞 060 523 9905
